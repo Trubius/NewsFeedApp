@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NewsFeedApp</string>
+    <string name="title">Title</string>
+    <string name="categories">Categories</string>
+    <string name="created">17/07/2018</string>
+    <string name="thumbnail">thumbnail</string>
 </resources>
