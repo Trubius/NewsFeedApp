@@ -23,7 +23,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private Context mContext;
     private List<Article> mArticleList;
 
-    public ArticleAdapter (Context context, List<Article> list){
+    public ArticleAdapter(Context context, List<Article> list) {
         mContext = context;
         mArticleList = list;
     }
@@ -70,11 +70,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         }
     }
 
-    private Bitmap formatImageFromBitmap(Bitmap bitmap){
+    private Bitmap formatImageFromBitmap(Bitmap bitmap) {
 
         Bitmap thumbnail;
 
-        if (bitmap == null){
+        if (bitmap == null) {
             thumbnail = BitmapFactory.decodeResource(mContext.getResources(), R.id.thumbnail);
         } else {
             thumbnail = bitmap;
@@ -82,11 +82,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         return thumbnail;
     }
 
-    private String formatTime(final String time){
+    private String formatTime(final String time) {
 
         String newTime = "N/A";
 
-        if ((time != null) && (!time.isEmpty())){
+        if ((time != null) && (!time.isEmpty())) {
             try {
                 SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                 SimpleDateFormat newFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
