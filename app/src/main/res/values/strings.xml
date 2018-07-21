@@ -4,4 +4,6 @@
     <string name="categories">Categories</string>
     <string name="created">17/07/2018</string>
     <string name="thumbnail">thumbnail</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="no_articles">No articles found</string>
 </resources>
