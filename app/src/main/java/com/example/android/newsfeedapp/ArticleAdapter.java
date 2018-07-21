@@ -1,8 +1,10 @@
 package com.example.android.newsfeedapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,11 +42,14 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
         holder.mThumbView.setImageBitmap(formatImageFromBitmap(article.getThumbnail()));
         holder.mTitleView.setText(article.getTitle());
+        holder.mCategory.setText(article.getCategory());
         holder.mDateView.setText(formatTime(article.getPublished()));
         holder.mItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                String url = article.getUrl();
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                mContext.startActivity(browserIntent);
             }
         });
     }
@@ -59,6 +64,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         private View mItemView;
         private ImageView mThumbView;
         private TextView mTitleView;
+        private TextView mCategory;
         private TextView mDateView;
 
         public ViewHolder(View view) {
@@ -66,6 +72,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             mItemView = view;
             mThumbView = (ImageView) view.findViewById(R.id.thumbnail);
             mTitleView = (TextView) view.findViewById(R.id.title);
+            mCategory = (TextView) view.findViewById(R.id.category);
             mDateView = (TextView) view.findViewById(R.id.published);
         }
     }
@@ -97,5 +104,20 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             }
         }
         return newTime;
+    }
+
+    public void clear() {
+        final int size = mArticleList.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                mArticleList.remove(0);
+            }
+            notifyItemRangeRemoved(0, size);
+        }
+    }
+
+    public void addAll(List<Article> articles) {
+        this.mArticleList.addAll(articles);
+        this.notifyItemRangeInserted(0, mArticleList.size() - 1);
     }
 }
