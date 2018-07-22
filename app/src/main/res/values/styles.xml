@@ -8,4 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="contentStyle">
+        <item name="android:layout_marginBottom">@dimen/text_margin</item>
+        <item name="android:layout_marginEnd">@dimen/text_margin</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+    </style>
+
+    <style name="titleStyle">
+        <item name="android:layout_marginBottom">@dimen/text_margin</item>
+        <item name="android:layout_marginEnd">@dimen/text_margin</item>
+        <item name="android:layout_marginTop">@dimen/text_margin</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:textSize">@dimen/text_title</item>
+    </style>
+
 </resources>
