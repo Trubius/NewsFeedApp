@@ -44,6 +44,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.mTitleView.setText(article.getTitle());
         holder.mCategory.setText(article.getCategory());
         holder.mDateView.setText(formatTime(article.getPublished()));
+        holder.mAuthor.setText(article.getAuthor());
         holder.mItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +67,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         private TextView mTitleView;
         private TextView mCategory;
         private TextView mDateView;
+        private TextView mAuthor;
 
         public ViewHolder(View view) {
             super(view);
@@ -74,6 +76,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             mTitleView = (TextView) view.findViewById(R.id.title);
             mCategory = (TextView) view.findViewById(R.id.category);
             mDateView = (TextView) view.findViewById(R.id.published);
+            mAuthor = (TextView) view.findViewById(R.id.author);
         }
     }
 

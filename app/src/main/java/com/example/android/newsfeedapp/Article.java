@@ -9,13 +9,15 @@ public class Article {
     private String mPublished;
     private Bitmap mThumbnail;
     private String mUrl;
+    private String mAuthor;
 
-    public Article(String title, String category, String published, Bitmap thumbnail, String url){
+    public Article(String title, String category, String published, Bitmap thumbnail, String url, String author){
         mTitle = title;
         mCategory = category;
         mPublished = published;
         mThumbnail = thumbnail;
         mUrl = url;
+        mAuthor = author;
     }
 
     public String getTitle() {
@@ -36,5 +38,9 @@ public class Article {
 
     public String getUrl() {
         return mUrl;
+    }
+
+    public String getAuthor() {
+        return mAuthor;
     }
 }

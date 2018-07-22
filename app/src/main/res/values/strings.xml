@@ -2,7 +2,9 @@
     <string name="app_name">NewsFeedApp</string>
     <string name="title">Title</string>
     <string name="categories">Categories</string>
-    <string name="created">17/07/2018</string>
+    <string name="published">17/07/2018</string>
+    <string name="author">Author</string>
+    <string name="interpoint">&#183;</string>
     <string name="thumbnail">thumbnail</string>
     <string name="no_internet">No internet connection</string>
     <string name="no_articles">No articles found</string>

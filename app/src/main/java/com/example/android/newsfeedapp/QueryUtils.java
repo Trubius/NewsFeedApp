@@ -118,6 +118,7 @@ public final class QueryUtils {
             JSONArray resultsArray = responseObj.getJSONArray("results");
 
             for (int i = 0; i < resultsArray.length(); i++) {
+                String author = "";
                 JSONObject currentResult = resultsArray.getJSONObject(i);
                 String title = currentResult.getString("webTitle");
                 String category = currentResult.getString("sectionName");
@@ -129,9 +130,21 @@ public final class QueryUtils {
                 Bitmap bitmapThumbnail = BitmapFactory.decodeStream(urlThumbnail.openConnection().getInputStream());
                 String url = fields.getString("shortUrl");
 
-                Article article = new Article(title,category,published,bitmapThumbnail,url);
-                articles.add(article);
+                JSONArray tagsArray = currentResult.getJSONArray("tags");
+                for (int j = 0; j < tagsArray.length(); j++) {
+                    JSONObject tag = tagsArray.getJSONObject(j);
+                    if (tag.has("webTitle")) {
+                        author = tag.getString("webTitle");
+                    } else {
+                        author = "Unknown author";
+                    }
+                }
+                if (tagsArray.length() == 0){
+                    author = "Unknown author";
+                }
 
+                Article article = new Article(title,category,published,bitmapThumbnail,url,author);
+                articles.add(article);
             }
 
         } catch (JSONException jsone) {
