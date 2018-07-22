@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
 
@@ -103,12 +105,25 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private String formatTime(final String time) {
 
         String newTime = "N/A";
+        long date;
+        long now;
+        long difference;
+        CharSequence ago;
 
         if ((time != null) && (!time.isEmpty())) {
             try {
                 SimpleDateFormat currentFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                SimpleDateFormat newFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
-                newTime = newFormat.format(currentFormat.parse(time));
+                currentFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                date = currentFormat.parse(time).getTime();
+                now = System.currentTimeMillis();
+                difference = now - date;
+                ago = DateUtils.getRelativeTimeSpanString(date,now,DateUtils.FORMAT_ABBREV_ALL);
+                if (difference < 60000){
+                    // If the article was published less than 1 minute ago
+                    newTime = "Just now";
+                } else {
+                    newTime = ago.toString();
+                }
             } catch (ParseException e) {
                 newTime = "N/A";
                 Log.e(LOG_TAG, "Error while parsing time format", e);
