@@ -55,7 +55,6 @@ public final class QueryUtils {
     private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
-        // If the URL is null, then return early.
         if (url == null) {
             return jsonResponse;
         }
@@ -129,6 +128,7 @@ public final class QueryUtils {
                 URL urlThumbnail = new URL(thumbnail);
                 Bitmap bitmapThumbnail = BitmapFactory.decodeStream(urlThumbnail.openConnection().getInputStream());
                 String url = fields.getString("shortUrl");
+                String content = fields.getString("bodyText");
 
                 JSONArray tagsArray = currentResult.getJSONArray("tags");
                 for (int j = 0; j < tagsArray.length(); j++) {
@@ -143,7 +143,7 @@ public final class QueryUtils {
                     author = "Unknown author";
                 }
 
-                Article article = new Article(title,category,published,bitmapThumbnail,url,author);
+                Article article = new Article(title,category,published,bitmapThumbnail,url,author, content);
                 articles.add(article);
             }
 

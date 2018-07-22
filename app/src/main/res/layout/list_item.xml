@@ -19,8 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:textSize="14sp"
             android:text="@string/categories"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,21 +28,38 @@
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/title"
-            android:textSize="18sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_constraintBottom_toTopOf="@id/author"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/content"
             app:layout_constraintEnd_toStartOf="@id/thumbnail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/category" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:scrollHorizontally="true"
+            android:text="@string/content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/author"
+            app:layout_constraintEnd_toStartOf="@id/thumbnail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/thumbnail"
             android:scaleType="centerCrop"

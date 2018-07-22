@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +47,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.mCategory.setText(article.getCategory());
         holder.mDateView.setText(formatTime(article.getPublished()));
         holder.mAuthor.setText(article.getAuthor());
+        holder.mContent.setText(article.getContent());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            holder.mContent.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+        }
         holder.mItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +74,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         private TextView mCategory;
         private TextView mDateView;
         private TextView mAuthor;
+        private TextView mContent;
 
         public ViewHolder(View view) {
             super(view);
@@ -77,6 +84,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             mCategory = (TextView) view.findViewById(R.id.category);
             mDateView = (TextView) view.findViewById(R.id.published);
             mAuthor = (TextView) view.findViewById(R.id.author);
+            mContent = (TextView) view.findViewById(R.id.content);
         }
     }
 

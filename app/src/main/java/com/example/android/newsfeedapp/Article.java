@@ -10,14 +10,16 @@ public class Article {
     private Bitmap mThumbnail;
     private String mUrl;
     private String mAuthor;
+    private String mContent;
 
-    public Article(String title, String category, String published, Bitmap thumbnail, String url, String author){
+    public Article(String title, String category, String published, Bitmap thumbnail, String url, String author, String content){
         mTitle = title;
         mCategory = category;
         mPublished = published;
         mThumbnail = thumbnail;
         mUrl = url;
         mAuthor = author;
+        mContent = content;
     }
 
     public String getTitle() {
@@ -42,5 +44,9 @@ public class Article {
 
     public String getAuthor() {
         return mAuthor;
+    }
+
+    public String getContent() {
+        return mContent;
     }
 }
