@@ -118,15 +118,18 @@ public final class QueryUtils {
 
             for (int i = 0; i < resultsArray.length(); i++) {
                 String author = "";
+                Bitmap bitmapThumbnail = null;
                 JSONObject currentResult = resultsArray.getJSONObject(i);
                 String title = currentResult.getString("webTitle");
                 String category = currentResult.getString("sectionName");
                 String published = currentResult.getString("webPublicationDate");
 
                 JSONObject fields = currentResult.getJSONObject("fields");
-                String thumbnail = fields.getString("thumbnail");
-                URL urlThumbnail = new URL(thumbnail);
-                Bitmap bitmapThumbnail = BitmapFactory.decodeStream(urlThumbnail.openConnection().getInputStream());
+                if (fields.has("thumbnail")) {
+                    String thumbnail = fields.getString("thumbnail");
+                    URL urlThumbnail = new URL(thumbnail);
+                    bitmapThumbnail = BitmapFactory.decodeStream(urlThumbnail.openConnection().getInputStream());
+                }
                 String url = fields.getString("shortUrl");
                 String content = fields.getString("bodyText");
 
@@ -139,11 +142,11 @@ public final class QueryUtils {
                         author = "Unknown author";
                     }
                 }
-                if (tagsArray.length() == 0){
+                if (tagsArray.length() == 0) {
                     author = "Unknown author";
                 }
 
-                Article article = new Article(title,category,published,bitmapThumbnail,url,author, content);
+                Article article = new Article(title, category, published, bitmapThumbnail, url, author, content);
                 articles.add(article);
             }
 
