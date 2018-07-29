@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private View loadingIndicator;
     private EditText searchTextView;
     private String getQuery = null;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,10 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         hideKeyboard(findViewById(R.id.root_view));
 
         checkNetworkConnection();
-
         handleIntent(getIntent());
+
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        setSwipeRefresh();
     }
 
     @Override
@@ -156,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
     }
 
-    public void hideKeyboard(View view) {
+    private void hideKeyboard(View view) {
 
         // Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {
@@ -196,5 +200,20 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
             mEmptyView.setText(getString(R.string.no_internet));
         }
+    }
+
+    private void setSwipeRefresh() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getQuery = null;
+                getSupportActionBar().setTitle(R.string.app_name);
+                mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_dark),
+                        getResources().getColor(android.R.color.holo_red_dark),
+                        getResources().getColor(android.R.color.holo_orange_dark),
+                        getResources().getColor(android.R.color.holo_green_dark));
+                getLoaderManager().restartLoader(0, null, MainActivity.this);
+            }
+        });
     }
 }
