@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private TextView mEmptyView;
     private View loadingIndicator;
     private EditText searchTextView;
-    private String getQuery;
+    private String getQuery = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        uriBuilder.appendQueryParameter("q", getQuery);
+        if (getQuery != null) {
+            uriBuilder.appendQueryParameter("q", getQuery);
+            uriBuilder.appendQueryParameter("order-by", "relevance");
+        } else {
+            uriBuilder.appendQueryParameter("order-by", "newest");
+        }
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter("show-fields", "all");
         uriBuilder.appendQueryParameter("api-key", "aeeecf4b-8953-4a2b-850d-f2fabdadc38c");
