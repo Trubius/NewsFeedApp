@@ -97,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     @Override
     public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
         loadingIndicator.setVisibility(GONE);
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
         mEmptyView.setText(R.string.no_articles);
         mArticleAdapter.clear();
 
@@ -226,7 +229,18 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                         getResources().getColor(android.R.color.holo_red_dark),
                         getResources().getColor(android.R.color.holo_orange_dark),
                         getResources().getColor(android.R.color.holo_green_dark));
-                loaderManager.restartLoader(0, null, MainActivity.this);
+                recyclerView.setVisibility(GONE);
+                mEmptyView.setVisibility(GONE);
+                loadingIndicator.setVisibility(VISIBLE);
+                if (checkNetworkConnection()) {
+                    loaderManager.restartLoader(0, null, MainActivity.this);
+                } else {
+                    mArticleAdapter.clear();
+                    recyclerView.setEmptyView(mEmptyView);
+                    loadingIndicator.setVisibility(GONE);
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    mEmptyView.setText(getString(R.string.no_internet));
+                }
             }
         });
     }
