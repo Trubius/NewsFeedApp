@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        recyclerView.setEmptyView(mEmptyView);
         mEmptyView.setText(R.string.no_articles);
         mArticleAdapter.clear();
 
@@ -168,6 +169,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         int id = item.getItemId();
         if (id == R.id.search) {
             return false;
+        }
+        if (id == R.id.settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
