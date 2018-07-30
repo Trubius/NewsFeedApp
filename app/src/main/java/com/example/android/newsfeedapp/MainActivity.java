@@ -7,9 +7,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,18 +33,20 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Article>> {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Article>>, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String REQUEST_URL = "https://content.guardianapis.com/search?";
     private static final int ARTICLE_LOADER_ID = 1;
+    private static final String QUERY_STRING = "queryString";
     private ArticleAdapter mArticleAdapter;
     private TextView mEmptyView;
     private View loadingIndicator;
     private EditText searchTextView;
-    private String getQuery = null;
+    private String queryString;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LoaderManager loaderManager = getLoaderManager();
     private EmptyRecyclerView recyclerView;
+    private SharedPreferences sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,19 +59,32 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         recyclerView.setEmptyView(mEmptyView);
         mArticleAdapter = new ArticleAdapter(this, new ArrayList<Article>());
         recyclerView.setAdapter(mArticleAdapter);
+        sharedPrefs= PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs.registerOnSharedPreferenceChangeListener(this);
         loadingIndicator = findViewById(R.id.loading_indicator);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
-
+        if (savedInstanceState != null) {
+            queryString = savedInstanceState.getString(QUERY_STRING);
+        }
+        if (queryString != null){
+            getSupportActionBar().setTitle("Search for " + queryString);
+        }
         setSwipeRefresh();
         hideKeyboard(findViewById(R.id.root_view));
 
         if (checkNetworkConnection()) {
-            handleIntent(getIntent());
             loaderManager.initLoader(ARTICLE_LOADER_ID, null, this);
+            handleIntent(getIntent());
         } else {
             loadingIndicator.setVisibility(GONE);
             mEmptyView.setText(getString(R.string.no_internet));
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(QUERY_STRING, queryString);
     }
 
     @Override
@@ -77,12 +94,33 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     }
 
     @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.settings_categories_key))) {
+            mArticleAdapter.clear();
+            mEmptyView.setVisibility(View.GONE);
+            loadingIndicator.setVisibility(View.VISIBLE);
+            if (checkNetworkConnection()) {
+                loaderManager.restartLoader(ARTICLE_LOADER_ID, null, this);
+            } else {
+                recyclerView.setEmptyView(mEmptyView);
+                loadingIndicator.setVisibility(GONE);
+                mEmptyView.setText(getString(R.string.no_internet));
+            }
+        }
+    }
+
+    @Override
     public Loader<List<Article>> onCreateLoader(int id, Bundle args) {
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String categories = sharedPrefs.getString(getString(R.string.settings_categories_key), getString(R.string.settings_categories_default));
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        if (getQuery != null) {
-            uriBuilder.appendQueryParameter("q", getQuery);
+        if (!categories.equals("recent")) {
+            uriBuilder.appendQueryParameter("section", categories);
+        }
+        if (queryString != null) {
+            uriBuilder.appendQueryParameter("q", queryString);
             uriBuilder.appendQueryParameter("order-by", "relevance");
         } else {
             uriBuilder.appendQueryParameter("order-by", "newest");
@@ -140,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                getQuery = query;
+                queryString = query;
                 searchView.clearFocus();
                 searchMenu.collapseActionView();
                 recyclerView.setVisibility(GONE);
@@ -181,10 +219,10 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private void handleIntent(Intent intent) {
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            getQuery = intent.getStringExtra(SearchManager.QUERY);
-            getSupportActionBar().setTitle("Search for " + getQuery);
+            queryString = intent.getStringExtra(SearchManager.QUERY);
+            getSupportActionBar().setTitle("Search for " + queryString);
             mEmptyView.setVisibility(GONE);
-            loaderManager.restartLoader(0, null, this);
+            loaderManager.restartLoader(ARTICLE_LOADER_ID, null, this);
         }
     }
 
@@ -229,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getQuery = null;
+                queryString = null;
                 getSupportActionBar().setTitle(R.string.app_name);
                 mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_dark),
                         getResources().getColor(android.R.color.holo_red_dark),
@@ -239,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                 mEmptyView.setVisibility(GONE);
                 loadingIndicator.setVisibility(VISIBLE);
                 if (checkNetworkConnection()) {
-                    loaderManager.restartLoader(0, null, MainActivity.this);
+                    loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
                 } else {
                     mArticleAdapter.clear();
                     recyclerView.setEmptyView(mEmptyView);
