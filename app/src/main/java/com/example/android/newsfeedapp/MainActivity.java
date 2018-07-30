@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Article>> {
 
@@ -40,25 +41,33 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private EditText searchTextView;
     private String getQuery = null;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private LoaderManager loaderManager = getLoaderManager();
+    private EmptyRecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EmptyRecyclerView recyclerView = (EmptyRecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (EmptyRecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mEmptyView = (TextView) findViewById(R.id.empty_view);
         recyclerView.setEmptyView(mEmptyView);
         mArticleAdapter = new ArticleAdapter(this, new ArrayList<Article>());
         recyclerView.setAdapter(mArticleAdapter);
+        loadingIndicator = findViewById(R.id.loading_indicator);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
+
+        setSwipeRefresh();
         hideKeyboard(findViewById(R.id.root_view));
 
-        checkNetworkConnection();
-        handleIntent(getIntent());
-
-        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
-        setSwipeRefresh();
+        if (checkNetworkConnection()) {
+            handleIntent(getIntent());
+            loaderManager.initLoader(ARTICLE_LOADER_ID, null, this);
+        } else {
+            loadingIndicator.setVisibility(GONE);
+            mEmptyView.setText(getString(R.string.no_internet));
+        }
     }
 
     @Override
@@ -87,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     @Override
     public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
-        loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(GONE);
         mEmptyView.setText(R.string.no_articles);
         mArticleAdapter.clear();
@@ -109,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final MenuItem searchItem = menu.findItem(R.id.search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
+        final MenuItem searchMenu = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) searchMenu.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconified(false);
         searchView.onActionViewExpanded();
@@ -130,8 +138,18 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             public boolean onQueryTextSubmit(String query) {
                 getQuery = query;
                 searchView.clearFocus();
-                searchItem.collapseActionView();
-                return false;
+                searchMenu.collapseActionView();
+                recyclerView.setVisibility(GONE);
+                loadingIndicator.setVisibility(VISIBLE);
+                if (checkNetworkConnection()) {
+                    return false;
+                } else {
+                    mArticleAdapter.clear();
+                    recyclerView.setEmptyView(mEmptyView);
+                    loadingIndicator.setVisibility(GONE);
+                    mEmptyView.setText(getString(R.string.no_internet));
+                }
+                return true;
             }
 
             @Override
@@ -156,7 +174,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             getQuery = intent.getStringExtra(SearchManager.QUERY);
             getSupportActionBar().setTitle("Search for " + getQuery);
-            getLoaderManager().restartLoader(0, null, this);
+            mEmptyView.setVisibility(GONE);
+            loaderManager.restartLoader(0, null, this);
         }
     }
 
@@ -187,19 +206,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void checkNetworkConnection() {
+    private boolean checkNetworkConnection() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(ARTICLE_LOADER_ID, null, this);
-        } else {
-            loadingIndicator = findViewById(R.id.loading_indicator);
-            loadingIndicator.setVisibility(GONE);
-
-            mEmptyView.setText(getString(R.string.no_internet));
+            return true;
         }
+        return false;
     }
 
     private void setSwipeRefresh() {
@@ -212,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
                         getResources().getColor(android.R.color.holo_red_dark),
                         getResources().getColor(android.R.color.holo_orange_dark),
                         getResources().getColor(android.R.color.holo_green_dark));
-                getLoaderManager().restartLoader(0, null, MainActivity.this);
+                loaderManager.restartLoader(0, null, MainActivity.this);
             }
         });
     }
