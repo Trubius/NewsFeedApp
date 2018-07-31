@@ -4,11 +4,29 @@
         <item>@string/settings_categories_recent_label</item>
         <item>@string/settings_categories_world_news_label</item>
         <item>@string/settings_categories_uk_news_label</item>
+        <item>@string/settings_categories_technology_label</item>
+        <item>@string/settings_categories_business_label</item>
+        <item>@string/settings_categories_environment_label</item>
+        <item>@string/settings_categories_football_label</item>
+        <item>@string/settings_categories_books_label</item>
+        <item>@string/settings_categories_music_label</item>
+        <item>@string/settings_categories_film_label</item>
+        <item>@string/settings_categories_games_label</item>
+        <item>@string/settings_categories_travel_label</item>
     </string-array>
 
     <string-array name="settings_categories_values">
         <item>@string/settings_categories_recent_value</item>
         <item>@string/settings_categories_world_news_value</item>
         <item>@string/settings_categories_uk_news_value</item>
+        <item>@string/settings_categories_technology_value</item>
+        <item>@string/settings_categories_business_value</item>
+        <item>@string/settings_categories_environment_value</item>
+        <item>@string/settings_categories_football_value</item>
+        <item>@string/settings_categories_books_value</item>
+        <item>@string/settings_categories_music_value</item>
+        <item>@string/settings_categories_film_value</item>
+        <item>@string/settings_categories_games_value</item>
+        <item>@string/settings_categories_travel_value</item>
     </string-array>
 </resources>

@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconified(false);
         searchView.onActionViewExpanded();
-        searchView.setQueryHint("Search");
+        searchView.setQueryHint(getString(R.string.search));
         int searchSrcTextView = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         searchTextView = searchView.findViewById(searchSrcTextView);
         searchTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -236,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         if (!(view instanceof EditText)) {
             view.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
-                    searchTextView.clearFocus();
                     hideSoftKeyboard(v);
                     return false;
                 }

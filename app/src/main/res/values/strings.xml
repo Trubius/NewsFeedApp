@@ -14,10 +14,28 @@
     <string name="settings_categories_label">Categories</string>
     <string name="settings_categories_key" translatable="false">categories</string>
     <string name="settings_categories_default" translatable="false">@string/settings_categories_recent_value</string>
-    <string name="settings_categories_recent_label">Most Recent</string>
+    <string name="settings_categories_recent_label">Most recent</string>
     <string name="settings_categories_recent_value" translatable="false">recent</string>
     <string name="settings_categories_world_news_label">World news</string>
     <string name="settings_categories_world_news_value" translatable="false">world</string>
     <string name="settings_categories_uk_news_label">UK news</string>
     <string name="settings_categories_uk_news_value" translatable="false">uk-news</string>
+    <string name="settings_categories_technology_label">Technology</string>
+    <string name="settings_categories_technology_value" translatable="false">technology</string>
+    <string name="settings_categories_business_label">Business</string>
+    <string name="settings_categories_business_value" translatable="false">business</string>
+    <string name="settings_categories_environment_label">Environment</string>
+    <string name="settings_categories_environment_value" translatable="false">environment</string>
+    <string name="settings_categories_football_label">Football</string>
+    <string name="settings_categories_football_value" translatable="false">football</string>
+    <string name="settings_categories_books_label">Books</string>
+    <string name="settings_categories_books_value" translatable="false">books</string>
+    <string name="settings_categories_music_label">Music</string>
+    <string name="settings_categories_music_value" translatable="false">music</string>
+    <string name="settings_categories_film_label">Film</string>
+    <string name="settings_categories_film_value" translatable="false">film</string>
+    <string name="settings_categories_games_label">Games</string>
+    <string name="settings_categories_games_value" translatable="false">games</string>
+    <string name="settings_categories_travel_label">Travel</string>
+    <string name="settings_categories_travel_value" translatable="false">travel</string>
 </resources>
