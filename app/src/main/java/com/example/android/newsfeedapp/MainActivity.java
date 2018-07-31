@@ -59,14 +59,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         recyclerView.setEmptyView(mEmptyView);
         mArticleAdapter = new ArticleAdapter(this, new ArrayList<Article>());
         recyclerView.setAdapter(mArticleAdapter);
-        sharedPrefs= PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
         loadingIndicator = findViewById(R.id.loading_indicator);
         mSwipeRefreshLayout = findViewById(R.id.swipe_refresh);
         if (savedInstanceState != null) {
             queryString = savedInstanceState.getString(QUERY_STRING);
         }
-        if (queryString != null){
+        if (queryString != null) {
             getSupportActionBar().setTitle("Search for " + queryString);
         }
         setSwipeRefresh();
@@ -139,7 +139,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             mSwipeRefreshLayout.setRefreshing(false);
         }
         recyclerView.setEmptyView(mEmptyView);
-        mEmptyView.setText(R.string.no_articles);
+        if (checkNetworkConnection()) {
+            mEmptyView.setText(R.string.no_articles);
+        } else {
+            mEmptyView.setText(getString(R.string.no_internet));
+        }
         mArticleAdapter.clear();
 
         if (articles != null && !articles.isEmpty()) {
