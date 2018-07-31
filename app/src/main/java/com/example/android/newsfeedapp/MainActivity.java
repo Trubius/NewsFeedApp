@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private ArticleAdapter mArticleAdapter;
     private TextView mEmptyView;
     private View loadingIndicator;
-    private EditText searchTextView;
     private String queryString;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LoaderManager loaderManager = getLoaderManager();
@@ -170,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         searchView.onActionViewExpanded();
         searchView.setQueryHint(getString(R.string.search));
         int searchSrcTextView = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-        searchTextView = searchView.findViewById(searchSrcTextView);
+        EditText searchTextView = searchView.findViewById(searchSrcTextView);
         searchTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -260,10 +259,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            return true;
-        }
-        return false;
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     private void setSwipeRefresh() {
