@@ -32,6 +32,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public ArticleAdapter(Context context, List<Article> list) {
         mContext = context;
         mArticleList = list;
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -66,6 +67,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mArticleList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -143,7 +149,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     }
 
     public void addAll(List<Article> articles) {
-        this.mArticleList.addAll(articles);
-        this.notifyItemRangeInserted(0, mArticleList.size() - 1);
+        mArticleList.addAll(articles);
+        notifyItemRangeInserted(0, mArticleList.size() - 1);
     }
 }
