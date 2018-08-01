@@ -110,7 +110,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     private String formatTime(final String time) {
 
-        String newTime = "N/A";
+        String newTime = mContext.getString(R.string.n_a);
         long date;
         long now;
         long difference;
@@ -126,12 +126,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 ago = DateUtils.getRelativeTimeSpanString(date,now,DateUtils.FORMAT_ABBREV_ALL);
                 if (difference < 60000){
                     // If the article was published less than 1 minute ago
-                    newTime = "Just now";
+                    newTime = mContext.getString(R.string.just_now);
                 } else {
                     newTime = ago.toString();
                 }
             } catch (ParseException e) {
-                newTime = "N/A";
+                newTime = mContext.getString(R.string.n_a);
                 Log.e(LOG_TAG, "Error while parsing time format", e);
             }
         }

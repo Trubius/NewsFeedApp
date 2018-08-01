@@ -6,8 +6,8 @@
     <string name="author">Author</string>
     <string name="interpoint">&#183;</string>
     <string name="thumbnail">thumbnail</string>
-    <string name="no_internet">No internet connection</string>
-    <string name="no_articles">No articles found</string>
+    <string name="no_internet">Check your internet connection, swipe down to refresh</string>
+    <string name="no_articles">No articles found, swipe down to refresh</string>
     <string name="content">Content</string>
     <string name="search">Search</string>
     <string name="settings">Settings</string>
@@ -38,4 +38,10 @@
     <string name="settings_categories_games_value" translatable="false">games</string>
     <string name="settings_categories_travel_label">Travel</string>
     <string name="settings_categories_travel_value" translatable="false">travel</string>
+    <string name="n_a">N/A</string>
+    <string name="just_now">Just now</string>
+    <string name="search_for">Search for&#160;</string>
+    <string name="api_key">aeeecf4b-8953-4a2b-850d-f2fabdadc38c</string>
+    <string name="search_src_text">android:id/search_src_text</string>
+    <string name="unknown_author" >Unknown author</string>
 </resources>

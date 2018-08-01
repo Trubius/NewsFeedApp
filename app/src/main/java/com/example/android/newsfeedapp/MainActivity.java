@@ -38,6 +38,17 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static final String REQUEST_URL = "https://content.guardianapis.com/search?";
     private static final int ARTICLE_LOADER_ID = 1;
     private static final String QUERY_STRING = "queryString";
+    private static final String RECENT = "recent";
+    private static final String SECTION = "section";
+    private static final String QUERY = "q";
+    private static final String ORDER_BY = "order-by";
+    private static final String RELEVANCE = "relevance";
+    private static final String NEWEST = "newest";
+    private static final String SHOW_TAGS = "show-tags";
+    private static final String SHOW_FIELDS = "show-fields";
+    private static final String CONTRIBUTOR = "contributor";
+    private static final String ALL = "all";
+    private static final String API_KEY = "api-key";
     private ArticleAdapter mArticleAdapter;
     private TextView mEmptyView;
     private View loadingIndicator;
@@ -66,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             queryString = savedInstanceState.getString(QUERY_STRING);
         }
         if (queryString != null) {
-            getSupportActionBar().setTitle("Search for " + queryString);
+            getSupportActionBar().setTitle(getString(R.string.search_for) + queryString);
         }
         setSwipeRefresh();
         hideKeyboard(findViewById(R.id.root_view));
@@ -115,18 +126,18 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        if (!categories.equals("recent")) {
-            uriBuilder.appendQueryParameter("section", categories);
+        if (!categories.equals(RECENT)) {
+            uriBuilder.appendQueryParameter(SECTION, categories);
         }
         if (queryString != null) {
-            uriBuilder.appendQueryParameter("q", queryString);
-            uriBuilder.appendQueryParameter("order-by", "relevance");
+            uriBuilder.appendQueryParameter(QUERY, queryString);
+            uriBuilder.appendQueryParameter(ORDER_BY, RELEVANCE);
         } else {
-            uriBuilder.appendQueryParameter("order-by", "newest");
+            uriBuilder.appendQueryParameter(ORDER_BY, NEWEST);
         }
-        uriBuilder.appendQueryParameter("show-tags", "contributor");
-        uriBuilder.appendQueryParameter("show-fields", "all");
-        uriBuilder.appendQueryParameter("api-key", "aeeecf4b-8953-4a2b-850d-f2fabdadc38c");
+        uriBuilder.appendQueryParameter(SHOW_TAGS, CONTRIBUTOR);
+        uriBuilder.appendQueryParameter(SHOW_FIELDS, ALL);
+        uriBuilder.appendQueryParameter(API_KEY, getString(R.string.api_key));
 
         return new ArticleLoader(this, uriBuilder.toString());
     }
@@ -168,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         searchView.setIconified(false);
         searchView.onActionViewExpanded();
         searchView.setQueryHint(getString(R.string.search));
-        int searchSrcTextView = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        int searchSrcTextView = searchView.getContext().getResources().getIdentifier(getString(R.string.search_src_text), null, null);
         EditText searchTextView = searchView.findViewById(searchSrcTextView);
         searchTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -223,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             queryString = intent.getStringExtra(SearchManager.QUERY);
-            getSupportActionBar().setTitle("Search for " + queryString);
+            getSupportActionBar().setTitle(getString(R.string.search_for) + queryString);
             mEmptyView.setVisibility(GONE);
             loaderManager.restartLoader(ARTICLE_LOADER_ID, null, this);
         }

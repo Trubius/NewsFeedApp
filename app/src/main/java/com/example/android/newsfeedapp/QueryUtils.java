@@ -23,6 +23,17 @@ import java.util.List;
 public final class QueryUtils {
 
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    private static final String RESPONSE = "response";
+    private static final String RESULTS = "results";
+    private static final String WEB_TITLE = "webTitle";
+    private static final String SECTION_NAME = "sectionName";
+    private static final String PUBLISHED = "webPublicationDate";
+    private static final String FIELDS = "fields";
+    private static final String THUMBNAIL = "thumbnail";
+    private static final String SHORT_URL = "shortUrl";
+    private static final String BODY_TEXT = "bodyText";
+    private static final String TAGS = "tags";
+    private static final String UNKNOWN_AUTHOR = "Unknown author";
 
     private QueryUtils() {
     }
@@ -113,37 +124,37 @@ public final class QueryUtils {
         // Try to extract JSON
         try {
             JSONObject baseJsonResponse = new JSONObject(jsonResponse);
-            JSONObject responseObj = baseJsonResponse.getJSONObject("response");
-            JSONArray resultsArray = responseObj.getJSONArray("results");
+            JSONObject responseObj = baseJsonResponse.getJSONObject(RESPONSE);
+            JSONArray resultsArray = responseObj.getJSONArray(RESULTS);
 
             for (int i = 0; i < resultsArray.length(); i++) {
                 String author = "";
                 Bitmap bitmapThumbnail = null;
                 JSONObject currentResult = resultsArray.getJSONObject(i);
-                String title = currentResult.getString("webTitle");
-                String category = currentResult.getString("sectionName");
-                String published = currentResult.getString("webPublicationDate");
+                String title = currentResult.getString(WEB_TITLE);
+                String category = currentResult.getString(SECTION_NAME);
+                String published = currentResult.getString(PUBLISHED);
 
-                JSONObject fields = currentResult.getJSONObject("fields");
-                if (fields.has("thumbnail")) {
-                    String thumbnail = fields.getString("thumbnail");
+                JSONObject fields = currentResult.getJSONObject(FIELDS);
+                if (fields.has(THUMBNAIL)) {
+                    String thumbnail = fields.getString(THUMBNAIL);
                     URL urlThumbnail = new URL(thumbnail);
                     bitmapThumbnail = BitmapFactory.decodeStream(urlThumbnail.openConnection().getInputStream());
                 }
-                String url = fields.getString("shortUrl");
-                String content = fields.getString("bodyText");
+                String url = fields.getString(SHORT_URL);
+                String content = fields.getString(BODY_TEXT);
 
-                JSONArray tagsArray = currentResult.getJSONArray("tags");
+                JSONArray tagsArray = currentResult.getJSONArray(TAGS);
                 for (int j = 0; j < tagsArray.length(); j++) {
                     JSONObject tag = tagsArray.getJSONObject(j);
-                    if (tag.has("webTitle")) {
-                        author = tag.getString("webTitle");
+                    if (tag.has(WEB_TITLE)) {
+                        author = tag.getString(WEB_TITLE);
                     } else {
-                        author = "Unknown author";
+                        author = UNKNOWN_AUTHOR;
                     }
                 }
                 if (tagsArray.length() == 0) {
-                    author = "Unknown author";
+                    author = UNKNOWN_AUTHOR;
                 }
 
                 Article article = new Article(title, category, published, bitmapThumbnail, url, author, content);
